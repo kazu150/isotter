@@ -5,10 +5,10 @@ import Card from './Card';
 class Timeline extends React.Component {
 
     renderList = () => {
-        console.log(this.props.posts);
         return this.props.posts.map(post => {
             return(
                 <Card 
+                    currentUserName={this.props.currentUserName}
                     key={post._id}
                     thumbnail={post.userId.thumb} 
                     userName={post.userId.userName} 

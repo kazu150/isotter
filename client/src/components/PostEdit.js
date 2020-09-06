@@ -3,11 +3,6 @@ import history from '../history';
 
 class PostEdit extends React.Component {
     state={ post: '' }; 
-    
-    onSubmitButtonClick = () => {
-        this.props.onPostSubmit(this.state.post);
-        history.push('/');
-    }
 
     render(){
         return(
@@ -23,7 +18,7 @@ class PostEdit extends React.Component {
                 </div>
                 <div 
                     className='ui submit button'
-                    onClick={this.onSubmitButtonClick}
+                    onClick={() => this.props.onPostSubmit(this.state.post)}
                 >
                     Submit
                 </div>

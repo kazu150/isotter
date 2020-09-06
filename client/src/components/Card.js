@@ -18,14 +18,22 @@ const Card = props => {
                         <i className="edit icon"></i>
                         Update
                     </a>
-                    <a className="save" onClick={props.onDeleteClick}>
-                        <i className="trash icon"></i>
-                        Delete
-                    </a>
+                    {
+                        props.currentUserName === props.userName ?
+                        <a className="save" onClick={props.onDeleteClick}>
+                            <i className="trash icon"></i>
+                            Delete
+                        </a> :
+                        <a className="save" style={{'visibility': 'hidden'}}>
+                            <i className="trash icon"></i>
+                            Delete
+                        </a> 
+                    }
                     <a>
                         <i className="clock icon"></i>
                         {props.time}
                     </a>
+
                 </div>
             </div>
         </div>

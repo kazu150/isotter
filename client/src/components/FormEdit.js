@@ -5,9 +5,9 @@ const FormEdit = props => {
         <div className="field">
             <label>{props.title}</label>
             <input 
-                type="text" 
+                type={props.type || 'text'} 
                 name={props.name || 'default'} 
-                value={props.value}
+                value={props.type === 'file' ? undefined : props.value}
                 onChange={props.onChange} 
                 placeholder={props.placeholder || 'default'} 
             />

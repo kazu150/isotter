@@ -6,33 +6,9 @@ class LogIn extends React.Component {
 
     state = { userName: '', password: '', err: '' }
 
-    onLoggingIn = (e) => {
+    onLoginClick = e => {
         e.preventDefault();
-
-        const method = 'POST'
-
-        fetch('http://localhost:8080/admin/login', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userName: this.state.userName
-            })
-        })
-        .then(res => {
-            return res.json();
-        })
-        .then(resData => {
-            console.log(resData)
-            if( resData.user.length ){
-                history.push('/');
-                this.props.onLoginSubmit(resData.user[0]);
-            } else {
-                this.setState({ err: 'ユーザーがいません' });
-            }
-        })
-        .catch( err => console.log(err) );
+        this.props.onLoginSubmit(this.state.userName, this.state.password);
     }
 
     renderErrorMessage = () => {
@@ -48,12 +24,15 @@ class LogIn extends React.Component {
         }
     }
 
+    onForgotClick = () => {
+        history.push('/forgot-password')
+    }
 
     render(){
         return (
             <form 
                 className="ui form success"
-                onSubmit={this.onLoggingIn}
+                onSubmit={this.onLoginClick}
             >
                 <div className="ui medium header">Login</div>
                 <FormEdit 
@@ -67,7 +46,8 @@ class LogIn extends React.Component {
                 <FormEdit 
                     className="field" 
                     title="Password" 
-                    placeholder="test@test.com" 
+                    type="password"
+                    placeholder="●●●●●●" 
                     name={this.state.password} 
                     onChange={ e => this.setState({ password: e.target.value })} 
                 />
@@ -75,6 +55,16 @@ class LogIn extends React.Component {
                 <button type="submit" className="ui submit button">
                     Submit
                 </button>
+                <a 
+                    onClick={this.onForgotClick} 
+                    style={{
+                        display: 'block', 
+                        marginTop: '15px', 
+                        cursor: 'pointer'
+                    }}
+                >
+                    Forgot password?
+                </a>
             </form>
         );
     }
