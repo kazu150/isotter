@@ -11,6 +11,7 @@ import ResetPassword from './ResetPassword';
 import SignUp from './SignUp'; 
 import ErrorHandler from './ErrorHandler';
 import history from '../history';
+import env from '../environment';
 
 class App extends React.Component {
     state = { 
@@ -30,6 +31,7 @@ class App extends React.Component {
         const token  = localStorage.getItem('token');
         const userName = localStorage.getItem('userName');
         const userId = localStorage.getItem('userId');
+        console.log(process.env.NODE_ENV)
 
         if(new Date(expiryDate) <= new Date()){
             this.logoutHandler()
@@ -50,7 +52,7 @@ class App extends React.Component {
     }
 
     renderPosts = () => {
-        fetch('http://localhost:8080/timeline/posts',{
+        fetch(env.API_ORIGIN + 'timeline/posts',{
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -65,7 +67,7 @@ class App extends React.Component {
         })
         .then(resData => {
             resData.posts.map(post => {
-                post.userId.thumb = `http://localhost:8080/${post.userId.thumb}`
+                post.userId.thumb = `${env.API_ORIGIN}${post.userId.thumb}`
             })
 
             // 昇順降順の調整（https://qiita.com/PianoScoreJP/items/f0ff7345229871039672）
@@ -112,7 +114,7 @@ class App extends React.Component {
         }
 
         const method = 'POST';
-        fetch('http://localhost:8080/timeline/post', {
+        fetch(env.API_ORIGIN + 'timeline/post', {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +151,7 @@ class App extends React.Component {
     onDeleteClick = postId => {
         const method = 'DELETE';
 
-        fetch('http://localhost:8080/timeline/post',{
+        fetch(env.API_ORIGIN + 'timeline/post',{
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -208,7 +210,7 @@ class App extends React.Component {
     getUser = (userName) => {
         const method = 'GET';
 
-        fetch('http://localhost:8080/admin/userStatus/' + userName, {
+        fetch(env.API_ORIGIN + 'admin/userStatus/' + userName, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -229,7 +231,7 @@ class App extends React.Component {
             if(!resData.user[0].fruit ){
                 resData.user[0].fruit = '';
             }
-            resData.user[0].thumb = 'http://localhost:8080/' + resData.user[0].thumb
+            resData.user[0].thumb = env.API_ORIGIN + resData.user[0].thumb
             this.setState({
                 selectedUser: resData.user[0]
             })
@@ -247,7 +249,7 @@ class App extends React.Component {
     onLoginSubmit = (userName, password) => {
         const method = 'POST'
 
-        fetch('http://localhost:8080/admin/login', {
+        fetch(env.API_ORIGIN + 'admin/login', {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -316,7 +318,7 @@ class App extends React.Component {
             })
         }
 
-        fetch('http://localhost:8080/admin/reset-password', {
+        fetch(env.API_ORIGIN + 'admin/reset-password', {
             method: method,
             headers: {
                 'Content-Type':'application/json'
@@ -358,7 +360,7 @@ class App extends React.Component {
 
     validateResetPage = token => {
         
-        fetch('http://localhost:8080/admin/reset-password/' + token)
+        fetch(env.API_ORIGIN + 'admin/reset-password/' + token)
             .then(res => {
                 return res.json();
             })
@@ -395,7 +397,7 @@ class App extends React.Component {
                 throw error;
             }
 
-            const res = await fetch('http://localhost:8080/admin/reset-password/' + token, {
+            const res = await fetch(env.API_ORIGIN + 'admin/reset-password/' + token, {
                 method: method,
                 headers: {
                     'Content-Type':'application/json'
@@ -440,7 +442,7 @@ class App extends React.Component {
                 throw error;
             }
             
-            const res = await fetch('http://localhost:8080/admin/signup', {
+            const res = await fetch(env.API_ORIGIN + 'admin/signup', {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json'
@@ -504,7 +506,7 @@ class App extends React.Component {
             formData.append('thumb', newUserData.thumb[0] );
             formData.append('fruit', newUserData.fruit );
 
-            const res = await fetch('http://localhost:8080/admin/userStatus', {
+            const res = await fetch(env.API_ORIGIN + 'admin/userStatus', {
                 method: method,
                 headers: {
                     'Authorization': 'Bearer ' + token

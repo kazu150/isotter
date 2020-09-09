@@ -10,7 +10,7 @@ const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth: {
-        api_k
+        api_key: process.env.MAIL_KEY
     }
 }));
 
@@ -88,7 +88,7 @@ exports.login = async (req,res,next) => {
                 userId: req.user._id.toString(), 
                 userName: req.user.userName
             }, 
-            '',
+            process.env.JWT_PW,
             { expiresIn: '1h' }
         );
 
@@ -131,7 +131,7 @@ exports.forgotPassword = (req, res, next) => {
                     subject: 'Password Reset - Isotter',
                     html: `<p>こちらはIsotterです。パスワードのリセットを受付けました。</p>
                     <p>下記のURLからIsotterのパスワードの再設定をお願いします。<br>
-                    <a href="http://localhost:3000/reset-password/${token}">http://localhost:3000/reset-password/${token}</a></p>`
+                    <a href="https://isotter.herokuapp.com/reset-password/${token}">https://isotter.herokuapp.com/reset-password/${token}</a></p>`
                 })
             })
             .then(result =>{

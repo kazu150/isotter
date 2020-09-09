@@ -1,14 +1,27 @@
+const fs = require('fs');
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const timelineRoutes = require('./routes/timeline');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'),
+    {flags: 'a'}
+);
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined', {stream: accessLogStream}));
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -54,9 +67,9 @@ app.use((error, req, res, next) => {
 })
 
 mongoose.connect(
-    ''
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.g5fjc.gcp.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`
 ).
 then(result => {
-    app.listen(8080);
+    app.listen(process.env.PORT || 8080);
 })
 .catch(err => console.log(err));
